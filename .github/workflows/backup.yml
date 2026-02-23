@@ -1,0 +1,24 @@
+name: Backup Diário
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # diário às 02:00 UTC
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run backup script
+        run: |
+          chmod +x backup/backup.sh
+          ./backup/backup.sh
+
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-backup
+          path: backups/*.tar.gz
